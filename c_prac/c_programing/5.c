@@ -8,5 +8,7 @@ int main(){
 
 }
 
-// A negative number stored in two’s compliment of positive number. 
-// After shifting we get 1110, which is equivalent to -2.
+// A : -2
+
+// 음수는 양수의 2의 보수로 저장됩니다.
+// 시프트한 후에 결과는 1110이며, 이는 -2와 동일합니다.

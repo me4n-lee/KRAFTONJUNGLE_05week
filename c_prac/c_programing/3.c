@@ -8,4 +8,6 @@ int main(){
     printf("%d\n", *a);
 }
 
+// A : 2
+
 // as ‘a’ refers to base address.
