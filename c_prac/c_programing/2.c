@@ -1,12 +1,12 @@
-#include <stdio.h>
+// Q 2 - What is the output of the following program?
 
-int main() 
-{
-    unsigned int x = 5;
-    unsigned int *y = &x; // 변수 y의 타입을 unsigned int 포인터로 명시합니다.
-    unsigned int *p = y; // y에 0을 더하는 것은 불필요합니다. 직접 y를 할당하면 됩니다.
+#include<stdio.h>
 
-    printf("%u", *p);
-
-    return 0; // main 함수의 반환 값을 명시합니다.
+int main(){ 
+   int a[] = {1,2}, *p = a;
+   
+   printf("%d\n", p[1]); 
 }
+
+// as ‘p’ holds the base address then we can access array using ‘p’ 
+// just like with ‘a’
