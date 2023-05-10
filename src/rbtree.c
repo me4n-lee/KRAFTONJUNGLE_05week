@@ -145,6 +145,7 @@ void rbtree_insert_fixup(rbtree *t, node_t *z){
           z = z->parent;
           left_rotate(t, z);
         }
+
         z->parent->color = RBTREE_BLACK;
         z->parent->parent->color = RBTREE_RED;
         right_rotate(t, z->parent->parent);
@@ -167,7 +168,7 @@ void rbtree_insert_fixup(rbtree *t, node_t *z){
           z = z->parent;
           right_rotate(t, z);
         }
-        // Case 3.2: z가 부모의 왼쪽 자식이고, 삼촌이 BLACK인 경우
+
         z->parent->color = RBTREE_BLACK;
         z->parent->parent->color = RBTREE_RED;
         left_rotate(t, z->parent->parent);
@@ -360,7 +361,7 @@ void rbtree_delete_fixup(rbtree *t, node_t *x){
 
 /*------------------------------------------------------------------------------*/
 
-// solve
+
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n){
 
   node_t *cur = rbtree_min(t);
@@ -397,6 +398,7 @@ void left_rotate(rbtree *t, node_t *x)
   if (y->left != t->nil) {
     y->left->parent = x;
   }
+
   y->parent = x->parent;
   if (x->parent == t->nil) {
     t->root = y;
@@ -407,6 +409,7 @@ void left_rotate(rbtree *t, node_t *x)
   else {
     x->parent->right = y;
   }
+
   y->left = x;
   x->parent = y;
 }
@@ -419,6 +422,7 @@ void right_rotate(rbtree *t, node_t *x){
   if (y->right != t->nil) {
     y->right->parent = x;
   }
+
   y->parent = x->parent;
   if (x->parent == t->nil) {
     t->root = y;
@@ -429,6 +433,7 @@ void right_rotate(rbtree *t, node_t *x){
   else {
     x->parent->left = y;
   }
+
   y->right = x;
   x->parent = y;
 }
@@ -443,6 +448,7 @@ void transplant(rbtree *t, node_t *x, node_t *y)
   }else{
     x->parent->right = y;
   }
+  
   y->parent = x->parent;
 } 
 

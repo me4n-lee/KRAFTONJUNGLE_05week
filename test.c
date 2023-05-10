@@ -18,6 +18,7 @@ LEFT-ROTATE(t, x)
     y.left = x // x를 y의 왼쪽으로 놓는 과정
     x.p = y
 
+
 RIGHT-ROTATE(t, x)
     
     y = x.left // y를 설정
@@ -37,7 +38,6 @@ RIGHT-ROTATE(t, x)
 
     y.right = x // x를 y의 오른쪽으로 놓는 과정
     x.p = y
-
 
 /*------------------------------------------------------*/
 
@@ -210,3 +210,42 @@ RB-DELETE-FIXUP(t, x)
 
     x.color = BLACK
 
+int rbtree_erase(rbtree *t, node_t *p){
+  // 21.12.06 completed: implement erase
+  node_t* y = p; 
+  node_t* x = t->nil;
+  color_t y_original_color = y->color;
+
+  if (p->left == t->nil)
+  {  
+    x = p->right;
+    transplant(t, p, p->right);
+  }
+  else if (p->right == t->nil) 
+  {
+    x = p->left;
+    transplant(t, p, p->left);
+  }
+  
+  else
+  {
+    y = rbtree_min(t, p->right);
+    y_original_color = y->color;
+    x = y->right;
+    if (y->parent == p)
+      x->parent = y;
+    else
+    {
+      transplant(t, y, y->right);
+      y->right = p->right;
+      y->right->parent = y;
+    }
+    transplant(t, p, y);
+    y->left = p->left;
+    y->left->parent = y;
+    y->color = p->color;
+  }
+  if (y_original_color == RBTREE_BLACK);
+    rbtree_delete_fixup(t, x);
+  free(p);
+}
