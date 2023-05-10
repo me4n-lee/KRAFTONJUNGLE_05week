@@ -2,7 +2,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+rbtree *new_rbtree(void);
+void delete_rbtree(rbtree *t);
+node_t *rbtree_insert(rbtree *t, const key_t key);
 void rbtree_insert_fixup(rbtree *t, node_t *z);
+node_t *rbtree_find(const rbtree *t, const key_t key);
+node_t *rbtree_min(const rbtree *t);
+node_t *rbtree_max(const rbtree *t);
+int rbtree_erase(rbtree *t, node_t *p);
+
 void rbtree_delete_fixup(rbtree *t, node_t *x);
 void right_rotate(rbtree *t, node_t *x);
 void left_rotate(rbtree *t, node_t *x);
@@ -11,8 +19,8 @@ void transplant(rbtree *t, node_t *x, node_t *y);
 /*------------------------------------------------------------------------------*/
 
 // TODO: initialize struct if needed
-rbtree *new_rbtree(void)
-{
+rbtree *new_rbtree(void){
+
   rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
   node_t *nilnode = (node_t *)calloc(1,sizeof(node_t));
 
