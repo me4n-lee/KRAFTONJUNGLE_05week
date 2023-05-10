@@ -10,7 +10,6 @@ node_t *rbtree_find(const rbtree *t, const key_t key);
 node_t *rbtree_min(const rbtree *t);
 node_t *rbtree_max(const rbtree *t);
 int rbtree_erase(rbtree *t, node_t *p);
-
 void rbtree_delete_fixup(rbtree *t, node_t *x);
 void right_rotate(rbtree *t, node_t *x);
 void left_rotate(rbtree *t, node_t *x);
@@ -76,22 +75,24 @@ void delete_rbtree(rbtree *t){
 
 /*------------------------------------------------------------------------------*/
 
-// solve
 // TODO: implement insert
 node_t *rbtree_insert(rbtree *t, const key_t key){
   
-  node_t *new_node = (node_t *)calloc(1, sizeof(node_t));
-  new_node->key = key;
-  new_node->left = t->nil;
-  new_node->right = t->nil;
-  new_node->color = RBTREE_RED; // 삽입 색은 무조건 레드!
+  // 새로운 노드를 만들어 준다. insert fixup에 활용하기 위해서!
+  node_t *new = (node_t *)calloc(1, sizeof(node_t));
+  new->key = key; // 매개변수의 key값을 new에 저장
+  new->left = t->nil;
+  new->right = t->nil;
+  new->color = RBTREE_RED; // 삽입 색은 무조건 레드!
+
   node_t *y = t->nil;
   node_t *x = t->root;
 
+  // 트리가 비어있는 경우 또는 적절한 위치를 찾을 때까지 반복
   while(x != t->nil){
     y = x;
 
-    if(new_node->key < x->key){
+    if(new->key < x->key){
       x = x->left;
     }
     else{
@@ -99,21 +100,25 @@ node_t *rbtree_insert(rbtree *t, const key_t key){
     }
   }
   
-  new_node->parent = y;
+  new->parent = y;
 
+  // Case 1: 새 노드가 루트 노드가 될 경우
   if(y == t->nil){
-    t->root = new_node;
+    t->root = new;
   }
-  else if(new_node->key < y->key){
-    y->left = new_node;
+  // Case 2: 새 노드가 부모 노드의 왼쪽 자식이 될 경우
+  else if(new->key < y->key){
+    y->left = new;
   }
+  // Case 3: 새 노드가 부모 노드의 오른쪽 자식이 될 경우
   else{
-    y->right = new_node;
+    y->right = new;
   }
   
-  rbtree_insert_fixup(t, new_node);
+  rbtree_insert_fixup(t, new);
 
-  return new_node;
+  return new;
+  //return t->root;
 }
 
 
@@ -121,10 +126,13 @@ void rbtree_insert_fixup(rbtree *t, node_t *z){
 
   node_t *y;
   
+  // Case 1: z의 부모 노드가 RED일 때까지 반복
   while (z->parent->color == RBTREE_RED) {
+    // Case 2: z의 부모가 z의 할아버지의 왼쪽 자식일 경우
     if (z->parent == z->parent->parent->left) {
       y = z->parent->parent->right;
       
+      // Case 2.1: z의 삼촌이 RED일 경우
       if (y->color == RBTREE_RED) {
         z->parent->color = RBTREE_BLACK;
         y->color = RBTREE_BLACK;
@@ -132,6 +140,7 @@ void rbtree_insert_fixup(rbtree *t, node_t *z){
         z = z->parent->parent;
       }
       else {
+        // Case 2.2: z가 부모의 오른쪽 자식이고, 삼촌이 BLACK인 경우
         if (z == z->parent->right) {
           z = z->parent;
           left_rotate(t, z);
@@ -141,9 +150,11 @@ void rbtree_insert_fixup(rbtree *t, node_t *z){
         right_rotate(t, z->parent->parent);
       }
     }
+    // Case 3: z의 부모가 z의 할아버지의 오른쪽 자식일 경우
     else {
       y = z->parent->parent->left;
 
+      // Case 3.1: z의 삼촌이 RED인 경우
       if (y->color == RBTREE_RED) {
         z->parent->color = RBTREE_BLACK;
         y->color = RBTREE_BLACK;
@@ -151,11 +162,12 @@ void rbtree_insert_fixup(rbtree *t, node_t *z){
         z = z->parent->parent;
       }
       else {
+        // Case 3.2: z가 부모의 왼쪽 자식이고, 삼촌이 BLACK인 경우
         if (z == z->parent->left) {
           z = z->parent;
           right_rotate(t, z);
         }
-
+        // Case 3.2: z가 부모의 왼쪽 자식이고, 삼촌이 BLACK인 경우
         z->parent->color = RBTREE_BLACK;
         z->parent->parent->color = RBTREE_RED;
         left_rotate(t, z->parent->parent);

@@ -18,6 +18,27 @@ LEFT-ROTATE(t, x)
     y.left = x // x를 y의 왼쪽으로 놓는 과정
     x.p = y
 
+RIGHT-ROTATE(t, x)
+    
+    y = x.left // y를 설정
+    x.left = y.right // y의 오른쪽 서브트리를 x의 왼쪽 서브트리로 옮기는 과정
+
+    if y.right != t.nil
+        y.right.p = x
+
+    y.p = x.p // x의 부모를 y로 연결
+
+    if x.p == t.nil
+        t.root = y
+    elseif x == x.p.right
+        x.p.right = y
+    else
+        x.p.left = y
+
+    y.right = x // x를 y의 오른쪽으로 놓는 과정
+    x.p = y
+
+
 /*------------------------------------------------------*/
 
 RB-INSERT(t, z)
@@ -102,7 +123,7 @@ RB-TRANSPLANT(t, u, v)
     v.p = u.p
 
 
-RB-DELETE(t,z)
+RB-DELETE(t, z)
 
     y = z
     y-original-color = y.color
